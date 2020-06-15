@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace PieShop.Models
 {
@@ -13,6 +10,7 @@ namespace PieShop.Models
         {
             this.appDbContext = appDbContext;
         }
+
         public IEnumerable<Category> AllCategories => appDbContext.Categories;
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace PieShop.Models
 {
@@ -15,6 +13,7 @@ namespace PieShop.Models
             this.appDbContext = appDbContext;
         }
 
+        // Method to return all the pies in the database
         public IEnumerable<Pie> AllPies
         {
             get
@@ -23,6 +22,7 @@ namespace PieShop.Models
             }
         }
 
+        // Returns all pies which 'IsPieOfTheWeek' attribute = true
         public IEnumerable<Pie> PiesOfTheWeek
         {
             get
@@ -31,6 +31,7 @@ namespace PieShop.Models
             }
         }
 
+        // Returns a pie given its Id
         public Pie GetPieById(int pieId)
         {
             return appDbContext.Pies.FirstOrDefault(p => p.PieId == pieId);

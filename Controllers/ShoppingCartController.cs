@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using PieShop.Models;
 using PieShop.ViewModels;
@@ -33,6 +30,7 @@ namespace PieShop.Controllers
             return View(shoppingCartViewModel);
         }
 
+        // Adds the selected pie to the shopping cart, given its id 
         public RedirectToActionResult AddToShoppingCart(int pieId)
         {
             var selectedPie = _pieRepository.AllPies.FirstOrDefault(p => p.PieId == pieId);
@@ -41,9 +39,11 @@ namespace PieShop.Controllers
             {
                 _shoppingCart.AddToCart(selectedPie, 1);
             }
+
             return RedirectToAction("Index");
         }
 
+        // Removes the selected pie from the shopping cart, given it's id
         public RedirectToActionResult RemoveFromShoppingCart(int pieId)
         {
             var selectedPie = _pieRepository.AllPies.FirstOrDefault(p => p.PieId == pieId);
@@ -52,6 +52,7 @@ namespace PieShop.Controllers
             {
                 _shoppingCart.RemoveFromCart(selectedPie);
             }
+
             return RedirectToAction("Index");
         }
     }

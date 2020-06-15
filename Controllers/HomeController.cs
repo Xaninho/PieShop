@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PieShop.Models;
 using PieShop.ViewModels;
 
@@ -19,11 +15,13 @@ namespace PieShop.Controllers
 
         public IActionResult Index()
         {
+            // Creates an instance of the HomeViewModel to acquire the IEnumerable PiesOfTheWeek method available in the IPieRepository
             var homeViewModel = new HomeViewModel
             {
                 PiesOfTheWeek = _pieRepository.PiesOfTheWeek
             };
 
+            // Returns the ViewModel with the IEnumerable PiesOfTheWeek
             return View(homeViewModel);
         }
     }

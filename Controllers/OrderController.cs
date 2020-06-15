@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PieShop.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PieShop.Controllers
 {
@@ -20,32 +16,36 @@ namespace PieShop.Controllers
             _shoppingCart = shoppingCart;
         }
 
-        // GET: /<controller>/
         public IActionResult Checkout()
         {
             return View();
         }
 
+        // Method to checkout, given its order.
         [HttpPost]
         public IActionResult Checkout(Order order)
         {
             var items = _shoppingCart.GetShoppingCartItems();
             _shoppingCart.ShoppingCartItems = items;
 
+            // If the shopping cart is empty, returns an error message
             if (_shoppingCart.ShoppingCartItems.Count == 0)
             {
-                ModelState.AddModelError("", "Your cart is empty, add some pies first");
+                ModelState.AddModelError("Empty Cart", "Your cart is empty, add some pies first!");
             }
 
+            // If there aren't any errors, creates de order.
             if (ModelState.IsValid)
             {
                 _orderRepository.CreateOrder(order);
                 _shoppingCart.ClearCart();
                 return RedirectToAction("CheckoutComplete");
             }
+
             return View(order);
         }
 
+        // Method called when a checkout is complete
         public IActionResult CheckoutComplete()
         {
             ViewBag.CheckoutCompleteMessage = "Thanks for your order. You'll soon enjoy our delicious pies!";

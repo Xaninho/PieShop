@@ -4,16 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace PieShop.Models
 {
     public class ShoppingCart
     {
         private readonly AppDbContext _appDbContext;
-
         public string ShoppingCartId { get; set; }
-
         public List<ShoppingCartItem> ShoppingCartItems { get; set; }
 
         private ShoppingCart(AppDbContext appDbContext)
@@ -21,6 +18,7 @@ namespace PieShop.Models
             _appDbContext = appDbContext;
         }
 
+        // Returns the ShoppingCart of the current session
         public static ShoppingCart GetCart(IServiceProvider services)
         {
             ISession session = services.GetRequiredService<IHttpContextAccessor>()?
@@ -35,12 +33,13 @@ namespace PieShop.Models
             return new ShoppingCart(context) { ShoppingCartId = cartId };
         }
 
+        // Adds the item to the current ShoppingCart
         public void AddToCart(Pie pie, int amount)
         {
-            var shoppingCartItem =
-                    _appDbContext.ShoppingCartItems.SingleOrDefault(
-                        s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == ShoppingCartId);
+            var shoppingCartItem =_appDbContext.ShoppingCartItems.SingleOrDefault(s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == ShoppingCartId);
 
+            // DOUBTS!
+            // If the current item already exists in the shopping cart, ads +1 to the amount. If not, creates a new one. 
             if (shoppingCartItem == null)
             {
                 shoppingCartItem = new ShoppingCartItem
@@ -56,14 +55,14 @@ namespace PieShop.Models
             {
                 shoppingCartItem.Amount++;
             }
+
             _appDbContext.SaveChanges();
         }
 
+        // Removes the item from the current ShoppingCart
         public int RemoveFromCart(Pie pie)
         {
-            var shoppingCartItem =
-                    _appDbContext.ShoppingCartItems.SingleOrDefault(
-                        s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == ShoppingCartId);
+            var shoppingCartItem =_appDbContext.ShoppingCartItems.SingleOrDefault(s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == ShoppingCartId);
 
             var localAmount = 0;
 
@@ -85,6 +84,7 @@ namespace PieShop.Models
             return localAmount;
         }
 
+        // Returns a list with all of the items in the shopping cart
         public List<ShoppingCartItem> GetShoppingCartItems()
         {
             return ShoppingCartItems ??
@@ -94,6 +94,7 @@ namespace PieShop.Models
                            .ToList());
         }
 
+        // Clears completely the shopping cart
         public void ClearCart()
         {
             var cartItems = _appDbContext
@@ -105,6 +106,7 @@ namespace PieShop.Models
             _appDbContext.SaveChanges();
         }
 
+        // Returns the total price of the current cart
         public decimal GetShoppingCartTotal()
         {
             var total = _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == ShoppingCartId)

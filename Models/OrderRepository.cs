@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PieShop.Models
 {
@@ -16,6 +14,7 @@ namespace PieShop.Models
             _shoppingCart = shoppingCart;
         }
 
+        // Method to create a simple Order
         public void CreateOrder(Order order)
         {
             order.OrderPlaced = DateTime.Now;
@@ -23,8 +22,8 @@ namespace PieShop.Models
             var shoppingCartItems = _shoppingCart.ShoppingCartItems;
             order.OrderTotal = _shoppingCart.GetShoppingCartTotal();
 
+            // Adds the order with its details
             order.OrderDetails = new List<OrderDetail>();
-            //adding the order with its details
 
             foreach (var shoppingCartItem in shoppingCartItems)
             {
